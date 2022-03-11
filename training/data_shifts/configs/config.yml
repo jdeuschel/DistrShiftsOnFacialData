@@ -1,0 +1,73 @@
+---
+name: Data_Shift
+experiment: face-robustness 
+comment: label 
+input_size: 128
+group: verification_baseline 
+tags:
+  run_type: Prototyping
+  model_info: Attributes
+method: 
+  num_ensemble: 1
+arch:
+  type: resnet34 
+  args: 
+    pretrained: true
+calibration:
+  temp_scaling: true
+data_loader:
+  type: FairFace 
+  args:
+    data_dir: data/
+    batch_size: 128 
+    shuffle: true
+    validation_split: 0.126
+    num_workers: 8
+    target: age
+augmentation:
+  mixup: false 
+  mixup_alpha: 0.1
+optimizer:
+  type: Adam
+  args:
+    lr: 0.0001 
+    weight_decay: 0.01
+loss: cross_entropy 
+lr_scheduler:
+  type: MultiStepLR #
+  args:
+    milestones: [200, 10000, 11000] 
+    gamma: 0.15
+trainer:
+  epochs: 30 
+  n_bins: 15
+  save_dir: saved/
+  save_period: 1
+  verbosity: 2
+  monitor: "off" 
+  early_stop: 20
+  precision: 32
+  benchmark: false
+  deterministic: false
+  profiler: false
+  log_gpu_memory: true
+  ddp_backend: ddp
+  n_gpu: 1
+  n_nodes: 1
+  log_gpu: none 
+  threads: 0 
+  fast_dev_run: false
+  auto_lr_find: false
+  limit_val_batches: 1.0
+  limit_train_batches: 1.0
+  max_steps: 0
+  resume_from_checkpoint: false
+  log_every_n_steps: 150
+  flush_logs_every_n_steps: 100
+  auto_select_gpus: true
+  gradient_clip_val: 0 
+  terminate_on_nan: true
+  track_grad_norm: -1 # default. -1 / 2, .inf
+  ddp_sharded: false
+  automatic_optimization: false 
+  csv: false
